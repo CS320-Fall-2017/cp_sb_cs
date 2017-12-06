@@ -11,7 +11,7 @@ def brute_force(x):
     precalclen = len(x)
 
     if precalclen == 2:
-        return onesmall,twosmall,delta
+        return delta,onesmall,twosmall
 
     for xiter in range(precalclen-1):
         for yiter in range(xiter+1,precalclen):
@@ -23,7 +23,7 @@ def brute_force(x):
 
     return [delta,onesmall,twosmall]
 
-def middle_helper(y,delta,midpoint):
+def middle_helper(delta,y,midpoint):
 
     deltatemp = xnew = ynew = 0
     pair1 = []
@@ -44,7 +44,7 @@ def middle_helper(y,delta,midpoint):
                 pair1 = yprime[iterone]
                 pair2 = yprime[itertwo]
                 #else if(y-yinner) == delta
-    return pair1,pair2,deltatemp
+    return deltatemp,pair1,pair2
 
 def calcDist(x,y):#x is point1 y is point2
     return math.sqrt((x[1] - y[1]) ** 2 + (x[2] - y[2]) ** 2)
@@ -65,18 +65,17 @@ def compute_closest_points(p,x,y):
     Rx = x[midIndex:]
     Ly = []
     Ry = []
-    midVal = Rx[midIndex][0]
+    midVal = Rx[midIndex-1][1]
     for yiter in y:
         if yiter[1] <= midVal:
             Ly.append(yiter)
         else:
             Ry.append(yiter)
 
-
     #Left
-    (x1,y1,delta1) = compute_closest_points(p,Lx,Ly)
+    (delta1,x1,y1) = compute_closest_points(p,Lx,Ly)
     #Right
-    (x2,y2,delta2) = compute_closest_points(p,Rx,Ry)
+    (delta2,x2,y2) = compute_closest_points(p,Rx,Ry)
 
     #delta = smallest of delta1 and delta2
     #xsmall = correspoinding delta and ysmall = corresponding delta
@@ -89,7 +88,7 @@ def compute_closest_points(p,x,y):
 
 
     #Middle
-    (x3,y3,delta3) = middle_helper(y,delta,midVal)
+    (delta3,x3,y3) = middle_helper(delta,y,midVal)
 
     if(delta3 <= delta):
         return delta3,x3,y3
@@ -107,5 +106,5 @@ if __name__ == '__main__':
 
     pair = compute_closest_points(p,x,y)
 
-    print(p)
+    print(pair)
     #helper.write_final_answer(sys.argv[1],pair)
