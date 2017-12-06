@@ -12,14 +12,15 @@ def brute_force(x):
 
     if precalclen == 2:
         return delta,onesmall,twosmall
-
-    for xiter in range(precalclen-1):
-        for yiter in range(xiter+1,precalclen):
-            dist = calcDist(x[xiter],x[yiter])
-            if delta > dist:
-                delta = dist
-                onesmall = x[xiter]
-                twosmall = x[yiter]
+    
+    else:
+        for xiter in range(precalclen-1):
+            for yiter in range(xiter+1,precalclen):
+                dist = calcDist(x[xiter],x[yiter])
+                if delta > dist:
+                    delta = dist
+                    onesmall = x[xiter]
+                    twosmall = x[yiter]
 
     return [delta,onesmall,twosmall]
 
@@ -101,10 +102,16 @@ if __name__ == '__main__':
     y = []
     p = numpy.genfromtxt(sys.argv[1])
 
+    import time
+    start_time = time.process_time()
+
     x = sorted(p, key=lambda row: row[1])
     y = sorted(p, key=lambda row: row[2])
 
     pair = compute_closest_points(p,x,y)
+
+    end_time = time.process_time()
+    print("Ran in: {:.5f} secs".format(end_time - start_time))
 
     returnable = [int(pair[1][0]),int(pair[2][0])]
     helper.write_final_answer(sys.argv[1],returnable)
