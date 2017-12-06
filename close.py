@@ -25,10 +25,9 @@ def brute_force(x):
 
 def middle_helper(delta,y,midpoint):
 
-    deltatemp = xnew = ynew = 0
+    bestsofar = delta
     pair1 = []
     pair2 = []
-
     leny = len(y)
 
     yprime = [xval for xval in y if (midpoint - delta <= xval[1] <= delta + midpoint)]#all y (whose x val) is within (midpoint+delta,midpoint-delta)
@@ -40,13 +39,14 @@ def middle_helper(delta,y,midpoint):
             #compare all yprime vals to yprime vals
             val = calcDist(yprime[iterone],yprime[itertwo])
             if val < delta:
-                deltatemp = val
+                bestsofar = val
                 pair1 = yprime[iterone]
                 pair2 = yprime[itertwo]
-                #else if(y-yinner) == delta
-    return deltatemp,pair1,pair2
+
+    return bestsofar,pair1,pair2
 
 def calcDist(x,y):#x is point1 y is point2
+    #return numpy.linalg.norm(x - y)
     return math.sqrt((x[1] - y[1]) ** 2 + (x[2] - y[2]) ** 2)
 
 def compute_closest_points(p,x,y):
@@ -65,7 +65,7 @@ def compute_closest_points(p,x,y):
     Rx = x[midIndex:]
     Ly = []
     Ry = []
-    midVal = Rx[midIndex-1][1]
+    midVal = x[midIndex][1]
     for yiter in y:
         if yiter[1] <= midVal:
             Ly.append(yiter)
@@ -90,7 +90,7 @@ def compute_closest_points(p,x,y):
     #Middle
     (delta3,x3,y3) = middle_helper(delta,y,midVal)
 
-    if(delta3 <= delta):
+    if(delta3 < delta):
         return delta3,x3,y3
     else:
         return delta,minpts[0],minpts[1]
@@ -106,5 +106,5 @@ if __name__ == '__main__':
 
     pair = compute_closest_points(p,x,y)
 
-    print(pair)
-    #helper.write_final_answer(sys.argv[1],pair)
+    returnable = [int(pair[1][0]),int(pair[2][0])]
+    helper.write_final_answer(sys.argv[1],returnable)
